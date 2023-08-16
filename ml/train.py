@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument(
         "--epochs",
         type=int,
-        default=14,
+        default=20,
         metavar="N",
         help="number of epochs to train (default: 14)",
     )
@@ -68,7 +68,7 @@ def parse_args():
     parser.add_argument(
         "--log-interval",
         type=int,
-        default=10,
+        default=50,
         metavar="N",
         help="how many batches to wait before logging training status",
     )
@@ -85,6 +85,8 @@ def train(args, model, device, train_loader, optimizer, epoch):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
+
+        # Update model
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
@@ -177,7 +179,7 @@ def main():
 
     if args.save_model:
         os.makedirs("outputs", exist_ok=True)
-        torch.save(model.state_dict(), "outputs/mnist_cnn.pt")
+        torch.save(model.state_dict(), "outputs/mnist_cnn_gpu.pt")
 
 
 if __name__ == "__main__":
